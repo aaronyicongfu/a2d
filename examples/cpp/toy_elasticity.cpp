@@ -144,7 +144,10 @@ void main_body(int argc, char* argv[]) {
 
   residual->zero();
   // BSRMatVecMult(*J, *solution, *residual);
-  (*residual)(nx, 1) = -1e2;
+  for (int k = nz / 4; k < 3 * nz / 4; k++) {
+    int node = nx + (nx + 1) * (0 + (ny + 1) * k);
+      (*residual)(node, 1) = -1e2;
+  }
   model->zero_bcs(residual);
 
   // Compute the solution
