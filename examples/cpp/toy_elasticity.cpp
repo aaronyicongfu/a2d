@@ -131,7 +131,7 @@ void main_body(int argc, char* argv[]) {
   t = new Timer("AMG Set up");
   int num_levels = 3;
   double omega = 0.6667;
-  double epsilon = 0.0;
+  double epsilon = 0.01;
   bool print_info = true;
   auto amg = model->new_amg(num_levels, omega, epsilon, J, print_info);
   delete t;
@@ -146,7 +146,7 @@ void main_body(int argc, char* argv[]) {
   // BSRMatVecMult(*J, *solution, *residual);
   for (int k = nz / 4; k < 3 * nz / 4; k++) {
     int node = nx + (nx + 1) * (0 + (ny + 1) * k);
-      (*residual)(node, 1) = -1e2;
+    (*residual)(node, 1) = -1e2;
   }
   model->zero_bcs(residual);
 

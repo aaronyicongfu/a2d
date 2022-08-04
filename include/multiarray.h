@@ -349,6 +349,11 @@ class MultiArraySlice {
     }
   }
 
+  /**
+   * Get the underlying data pointer
+   */
+  T* get_pointer() { return data; }
+
  private:
   T* data;
 

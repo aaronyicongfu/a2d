@@ -91,7 +91,7 @@ I BSRMatStandardAggregation(const I nrows, const IdxArrayType& rowp,
       for (I jp = rowp[i]; jp < jp_end; jp++) {
         const I j = cols[jp];
 
-        if (aggr[j] == 0) {  // unmarked neighbors
+        if (aggr[j] == not_aggregated) {  // unmarked neighbors
           aggr[j] = num_aggregates;
         }
       }
@@ -287,6 +287,7 @@ template <typename I, typename T, index_t M>
 void BSRMatStrengthOfConnection(T epsilon, BSRMat<I, T, M, M>& A,
                                 std::vector<I>& rowp, std::vector<I>& cols) {
   // Frobenius norm squared for each diagonal entry
+  T epsilon4 = epsilon * epsilon * epsilon * epsilon;
   std::vector<T> d(A.nbrows);
 
   if (A.diag) {
@@ -338,8 +339,7 @@ void BSRMatStrengthOfConnection(T epsilon, BSRMat<I, T, M, M>& A,
           }
         }
 
-        if (A2D::RealPart(af * af) >=
-            A2D::RealPart(epsilon * epsilon * d[i] * d[j])) {
+        if (A2D::RealPart(af * af) >= A2D::RealPart(epsilon4 * d[i] * d[j])) {
           cols[nnz] = j;
           nnz++;
         }
