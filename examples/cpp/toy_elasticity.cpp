@@ -120,21 +120,14 @@ void main_body(int argc, char* argv[]) {
 
   // Compute the Jacobian matrix
   Timer* t;
-  t = new Timer("Jacobian initialization");
   auto J = model->new_matrix();
-  delete t;
-
-  t = new Timer("Jacobian computation");
   model->jacobian(J);
-  delete t;
 
-  t = new Timer("AMG Set up");
   int num_levels = 3;
   double omega = 0.6667;
   double epsilon = 0.01;
   bool print_info = true;
   auto amg = model->new_amg(num_levels, omega, epsilon, J, print_info);
-  delete t;
 
   // Set the residuals and apply the boundary conditions
   auto solution = model->new_solution();
@@ -153,10 +146,8 @@ void main_body(int argc, char* argv[]) {
   // Compute the solution
   index_t monitor = 10;
   index_t max_iters = 80;
-  t = new Timer("CG solution");
   solution->zero();
   amg->cg(*residual, *solution, monitor, max_iters);
-  delete t;
 
   ToVTK<decltype(element->get_conn()), decltype(model->get_nodes())> vtk(conn,
                                                                          X);

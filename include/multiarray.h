@@ -48,6 +48,7 @@ struct __get_size<dim0> {
 template <index_t... dims>
 class FLayout {
  public:
+  FLayout() {}
   FLayout(const index_t dim0) : dim0(dim0), static_extents{dims...} {
     size = dim0;
     for (index_t i = 1; i < get_rank(); i++) {
@@ -109,6 +110,7 @@ class FLayout {
 template <index_t... dims>
 class CLayout {
  public:
+  CLayout() {}
   CLayout(const index_t dim0) : dim0(dim0), static_extents{dims...} {
     size = dim0;
     for (index_t i = 1; i < get_rank(); i++) {
@@ -123,7 +125,7 @@ class CLayout {
     }
   }
 
-  const index_t dim0;
+  index_t dim0;
   static const index_t rank = sizeof...(dims) + 1;  // total number of
                                                     // dimensions (fixed and
                                                     // variable)
@@ -172,6 +174,8 @@ template <typename T, class Layout>
 class MultiArray {
  public:
   typedef T type;
+
+  MultiArray() { data = nullptr; }
 
   MultiArray(Layout layout, T* data_ = NULL) : layout(layout), data(data_) {
     if (data) {

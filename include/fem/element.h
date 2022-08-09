@@ -4,6 +4,7 @@
 #include "multiarray.h"
 #include "sparse/sparse_amg.h"
 #include "sparse/sparse_matrix.h"
+#include "utils/a2dprofiler.h"
 
 namespace A2D {
 
@@ -96,7 +97,8 @@ class ElementBasis : public ElementBase<I, T, PDEInfo> {
   typedef A2D::MultiArray<T, ElemJacLayout> ElemJacArray;
 
   ElementBasis(const index_t nelems)
-      : nelems(nelems),
+      : t{new Timer("ElementBasis::ElementBasis(1)")},
+        nelems(nelems),
         conn_layout(nelems),
         elem_node_layout(nelems),
         elem_soln_layout(nelems),
@@ -116,10 +118,13 @@ class ElementBasis : public ElementBase<I, T, PDEInfo> {
         Uxi(quad_grad_layout),
         detJ(quad_detJ_layout),
         Jinv(quad_jtrans_layout),
-        data(quad_data_layout) {}
+        data(quad_data_layout) {
+    delete t;
+  }
   template <typename IdxType>
   ElementBasis(const index_t nelems, const IdxType conn_[])
-      : nelems(nelems),
+      : t{new Timer("ElementBasis::ElementBasis(2)")},
+        nelems(nelems),
         conn_layout(nelems),
         elem_node_layout(nelems),
         elem_soln_layout(nelems),
@@ -146,6 +151,7 @@ class ElementBasis : public ElementBase<I, T, PDEInfo> {
         conn(i, j) = conn_[nodes_per_elem * i + j];
       }
     }
+    delete t;
   }
   virtual ~ElementBasis() {}
 
@@ -211,6 +217,9 @@ class ElementBasis : public ElementBase<I, T, PDEInfo> {
   QuadGradLayout& get_quad_gradient_layout() { return quad_grad_layout; }
 
  private:
+  // Timer
+  Timer* t;
+
   // Connectivity layout
   ConnLayout conn_layout;
 

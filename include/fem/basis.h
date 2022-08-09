@@ -8,6 +8,7 @@
 #include "block_numeric.h"
 #include "parallel.h"
 #include "quadrature.h"
+#include "utils/a2dprofiler.h"
 
 namespace A2D {
 
@@ -39,6 +40,7 @@ class BasisOps {
   template <const index_t ndata_per_nodes, class ElementArray,
             class QuadPointArray>
   static void interp(ElementArray& input, QuadPointArray& output) {
+    Timer timer("BasisOps::interp()");
     for (A2D::index_t j = 0; j < Quadrature::NUM_QUAD_PTS; j++) {
       double pt[SPATIAL_DIM];
       Quadrature::getQuadPoint(j, pt);
@@ -70,6 +72,7 @@ class BasisOps {
   template <const index_t ndata_per_nodes, class QuadPointArray,
             class ElementArray>
   static void interpReverseAdd(QuadPointArray& input, ElementArray& output) {
+    Timer timer("BasisOps::interpReverseAdd()");
     for (A2D::index_t j = 0; j < Quadrature::NUM_QUAD_PTS; j++) {
       double pt[SPATIAL_DIM];
       Quadrature::getQuadPoint(j, pt);
@@ -104,6 +107,7 @@ class BasisOps {
             class QuadPointJacobianArray>
   static void compute_jtrans(ElementNodeArray& X, QuadPointDetJArray& detJ,
                              QuadPointJacobianArray& Jinv) {
+    Timer timer("BasisOps::compute_jtrans()");
     for (A2D::index_t j = 0; j < Quadrature::NUM_QUAD_PTS; j++) {
       double pt[SPATIAL_DIM];
       Quadrature::getQuadPoint(j, pt);
@@ -156,6 +160,7 @@ class BasisOps {
   template <typename T, const index_t vars_per_node, class ElementSolutionArray,
             class QuadPointGradientArray>
   static void gradient(ElementSolutionArray& U, QuadPointGradientArray& Uxi) {
+    Timer timer("BasisOps::gradient()");
     for (A2D::index_t j = 0; j < Quadrature::NUM_QUAD_PTS; j++) {
       double pt[SPATIAL_DIM];
       Quadrature::getQuadPoint(j, pt);
@@ -192,6 +197,7 @@ class BasisOps {
    */
   template <typename T, class FunctorType, class QuadPointDetJArray>
   static T integrate(QuadPointDetJArray& detJ, const FunctorType& integrand) {
+    Timer timer("BasisOps::integrate(1)");
     T value = 0.0;
     for (A2D::index_t j = 0; j < Quadrature::NUM_QUAD_PTS; j++) {
       double weight = Quadrature::getQuadWeight(j);
@@ -230,6 +236,7 @@ class BasisOps {
   static T integrate(QuadPointDetJArray& detJ, QuadPointJacobianArray& Jinv,
                      QuadPointGradientArray& Uxi,
                      const FunctorType& integrand) {
+    Timer timer("BasisOps::integrate(2)");
     T value = 0.0;
     for (A2D::index_t j = 0; j < Quadrature::NUM_QUAD_PTS; j++) {
       double weight = Quadrature::getQuadWeight(j);
@@ -283,6 +290,7 @@ class BasisOps {
             class QuadPointGradientArray>
   static T maximum(QuadPointDetJArray& detJ, QuadPointJacobianArray& Jinv,
                    QuadPointGradientArray& Uxi, const FunctorType& func) {
+    Timer timer("BasisOps::maximum()");
     T value = -1e20;
     for (A2D::index_t j = 0; j < Quadrature::NUM_QUAD_PTS; j++) {
       double weight = Quadrature::getQuadWeight(j);
@@ -337,6 +345,7 @@ class BasisOps {
             class ElementResidualArray>
   static void residuals(QuadPointDetJArray& detJ, QuadPointSolutionArray& Uq,
                         const FunctorType& resfunc, ElementResidualArray& res) {
+    Timer timer("BasisOps::residuals(1)");
     for (A2D::index_t j = 0; j < Quadrature::NUM_QUAD_PTS; j++) {
       double pt[SPATIAL_DIM];
       Quadrature::getQuadPoint(j, pt);
@@ -391,6 +400,7 @@ class BasisOps {
   static void residuals(QuadPointDetJArray& detJ, QuadPointJacobianArray& Jinv,
                         QuadPointGradientArray& Uxi, const FunctorType& resfunc,
                         ElementResidualArray& res) {
+    Timer timer("BasisOps::residuals(2)");
     for (A2D::index_t j = 0; j < Quadrature::NUM_QUAD_PTS; j++) {
       double pt[SPATIAL_DIM];
       Quadrature::getQuadPoint(j, pt);
@@ -455,6 +465,7 @@ class BasisOps {
             class ElementJacArray>
   static void jacobians(QuadPointDetJArray& detJ, QuadPointSolutionArray& Uq,
                         const FunctorType& jacfunc, ElementJacArray& jac) {
+    Timer timer("BasisOps::jacobians(1)");
     for (A2D::index_t j = 0; j < Quadrature::NUM_QUAD_PTS; j++) {
       double pt[SPATIAL_DIM];
       Quadrature::getQuadPoint(j, pt);
@@ -518,6 +529,7 @@ class BasisOps {
   static void jacobians(QuadPointDetJArray& detJ, QuadPointJacobianArray& Jinv,
                         QuadPointGradientArray& Uxi, const FunctorType& jacfunc,
                         ElementJacArray& jac) {
+    Timer timer("BasisOps::jacobians(2)");
     for (A2D::index_t j = 0; j < Quadrature::NUM_QUAD_PTS; j++) {
       double pt[SPATIAL_DIM];
       Quadrature::getQuadPoint(j, pt);
@@ -596,6 +608,7 @@ class BasisOps {
                               QuadPointSolutionArray& Uq,
                               QuadPointSolutionArray& Psiq,
                               const FunctorType& func) {
+    Timer timer("BasisOps::adjoint_product(1)");
     for (A2D::index_t j = 0; j < Quadrature::NUM_QUAD_PTS; j++) {
       double weight = Quadrature::getQuadWeight(j);
       const A2D::index_t npts = detJ.extent(0);
@@ -642,6 +655,7 @@ class BasisOps {
                               QuadPointGradientArray& Uxi,
                               QuadPointGradientArray& Psixi,
                               const FunctorType& func) {
+    Timer timer("BasisOps::adjoint_product(2)");
     for (A2D::index_t j = 0; j < Quadrature::NUM_QUAD_PTS; j++) {
       double weight = Quadrature::getQuadWeight(j);
       const A2D::index_t npts = detJ.extent(0);
