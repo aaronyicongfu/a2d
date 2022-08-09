@@ -84,6 +84,8 @@ class Mat {
     return A[N * i + j];
   }
 
+  T* get_data() { return A; }
+
   T A[M * N];
 };
 

@@ -11,7 +11,7 @@ option(BUILD_EXTENION "Compile the pybind11 extension" ON)
 option(DEBUG "a debug build without compiler optimization" OFF)
 
 # Specify c++ standard
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Set compiler flags

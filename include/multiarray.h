@@ -195,6 +195,8 @@ class MultiArray {
   Layout layout;
   T* data;
 
+  T* get_data() { return data; }
+
   /*
     Non-constant access to array elements
   */
@@ -316,6 +318,9 @@ class MultiArray {
   bool data_owner;
 };
 
+/**
+ * @brief Note: MultiArraySlice only works for CLayout
+ */
 template <typename T, index_t... dims>
 class MultiArraySlice {
  public:
@@ -352,7 +357,7 @@ class MultiArraySlice {
   /**
    * Get the underlying data pointer
    */
-  T* get_pointer() { return data; }
+  T* get_data() { return data; }
 
  private:
   T* data;

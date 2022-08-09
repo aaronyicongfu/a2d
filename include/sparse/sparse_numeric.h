@@ -927,7 +927,7 @@ T BSRMatArnoldiSpectralRadius(BSRMat<I, T, M, M> &A, I size = 15) {
   double *work = new double[lwork];
   int ldv = 1;
   int ldh = size;
-  int info = 0;
+  int info = -1;
   dgeev_("N", "N", &hsize, H, &ldh, eigreal, eigimag, NULL, &ldv, NULL, &ldv,
          work, &lwork, &info);
 
