@@ -9,10 +9,11 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
   using T = std::complex<double>;
-  using Layout = CLayout<3>;
+  using A_Layout = FLayout<3>;
+  using Ainv_Layout = CLayout<3>;
 
-  auto A = MultiArray<T, Layout>(Layout(3));
-  auto Ainv = MultiArray<T, Layout>(Layout(3));
+  auto A = MultiArray<T, A_Layout>(A_Layout(3));
+  auto Ainv = MultiArray<T, Ainv_Layout>(Ainv_Layout(3));
   A(0, 0) = T(0.95213344, 0.67950085);
   A(0, 1) = T(0.55520316, 0.12368274);
   A(0, 2) = T(0.49634073, 0.38212409);
@@ -23,12 +24,21 @@ int main(int argc, char* argv[]) {
   A(2, 1) = T(0.59794044, 0.73940968);
   A(2, 2) = T(0.13228835, 0.80532406);
 
-  blockPseudoInverse<T, 3>(A, Ainv);
-
+  printf("A:\n");
   for (int i = 0; i != 3; i++) {
     for (int j = 0; j != 3; j++) {
-      printf("A(%d, %d) = %.8f + %.8fj\n", i, j, Ainv(i, j).real(),
-             Ainv(i, j).imag());
+      printf("%8f+%8fj   ", A(i, j).real(), A(i, j).imag());
     }
+    printf("\n");
+  }
+
+  blockPseudoInverse<T, 3>(A, Ainv);
+
+  printf("inv(A):\n");
+  for (int i = 0; i != 3; i++) {
+    for (int j = 0; j != 3; j++) {
+      printf("%8f+%8fj   ", Ainv(i, j).real(), Ainv(i, j).imag());
+    }
+    printf("\n");
   }
 }
