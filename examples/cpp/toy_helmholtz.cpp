@@ -134,7 +134,7 @@ void set_dv_2d(const int nx, const int ny, DvArray& x) {
     for (int i = 0; i < nx + 1; i++) {
       int node = i + (nx + 1) * j;
       if (i < nx / 2 and j < ny / 2) {
-        x(node, 0) = 1e-3;
+        x(node, 0) = 0.1;
       } else {
         x(node, 0) = 1.0;
       }
